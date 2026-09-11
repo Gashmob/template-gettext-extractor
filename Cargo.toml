@@ -1,0 +1,15 @@
+[package]
+name = "template-gettext-extractor"
+description = "Gettext strings extractor in template files"
+keywords = ["gettext", "extractor", "template", "mustache"]
+version = "0.1.0"
+authors = ["Kevin Traini <kevin@ktraini.com>"]
+readme = "README.md"
+homepage = "https://github.com/Gashmob/template-gettext-extractor"
+repository = "https://github.com/Gashmob/template-gettext-extractor"
+license = "GPL-2.0-or-later"
+license-file = "LICENSE.txt"
+categories = ["command-line-utilities", "development-tools"]
+edition = "2024"
+
+[dependencies]
