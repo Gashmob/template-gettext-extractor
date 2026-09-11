@@ -17,6 +17,10 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-fn main() {
-    println!("Hello, world!");
+use std::env;
+
+mod cli;
+
+fn main() -> anyhow::Result<()> {
+    cli::run(env::args().collect())
 }

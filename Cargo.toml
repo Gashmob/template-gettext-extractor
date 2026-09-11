@@ -8,8 +8,16 @@ readme = "README.md"
 homepage = "https://github.com/Gashmob/template-gettext-extractor"
 repository = "https://github.com/Gashmob/template-gettext-extractor"
 license = "GPL-2.0-or-later"
-license-file = "LICENSE.txt"
 categories = ["command-line-utilities", "development-tools"]
 edition = "2024"
 
+[[bin]]
+name = "tge"
+path = "src/main.rs"
+
 [dependencies]
+anyhow = "1.0.104"
+clap = { version = "4.6.6", features = ["derive", "wrap_help", "string", "cargo"] }
+
+[dev-dependencies]
+pretty_assertions = "1.4.1"
