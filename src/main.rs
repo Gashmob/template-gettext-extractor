@@ -18,9 +18,13 @@
  */
 
 use std::env;
+use vfs::PhysicalFS;
 
 mod cli;
 
 fn main() -> anyhow::Result<()> {
-    cli::run(env::args().collect())
+    cli::run(
+        env::args().collect(),
+        PhysicalFS::new(env::current_dir()?).into(),
+    )
 }

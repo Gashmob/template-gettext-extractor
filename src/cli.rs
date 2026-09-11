@@ -20,6 +20,7 @@
 use clap::builder::Styles;
 use clap::builder::styling::{AnsiColor, Style};
 use clap::{Args, FromArgMatches, Parser};
+use vfs::VfsPath;
 
 #[derive(Parser, Debug)]
 #[command(name = "tge", version, about)]
@@ -51,7 +52,7 @@ fn get_styles() -> Styles {
         .context(AnsiColor::Magenta.on_default())
 }
 
-fn validate(cli: Cli) -> anyhow::Result<Cli> {
+fn validate(cli: Cli, current_dir: &VfsPath) -> anyhow::Result<Cli> {
     let input_files: Vec<String> = cli
         .input_files
         .iter()
@@ -70,6 +71,14 @@ fn validate(cli: Cli) -> anyhow::Result<Cli> {
         ));
     }
 
+    if !input_files.iter().all(|file| {
+        current_dir
+            .join(file)
+            .is_ok_and(|path| path.is_file().unwrap_or(false))
+    }) {
+        return Err(anyhow::Error::msg("Some given input files cannot be read"));
+    }
+
     let output_file = cli.output_file.trim().to_string();
     if output_file.is_empty() {
         return Err(anyhow::Error::msg("Please provide a valid output file"));
@@ -81,7 +90,7 @@ fn validate(cli: Cli) -> anyhow::Result<Cli> {
     })
 }
 
-pub fn run(args: Vec<String>) -> anyhow::Result<()> {
+pub fn run(args: Vec<String>, current_dir: VfsPath) -> anyhow::Result<()> {
     let cli = clap::Command::new("tge")
         .styles(get_styles())
         .arg_required_else_help(true)
@@ -90,7 +99,7 @@ pub fn run(args: Vec<String>) -> anyhow::Result<()> {
     let matches = cli.get_matches_from(args);
 
     let cli = Cli::from_arg_matches(&matches)?;
-    let cli = validate(cli)?;
+    let cli = validate(cli, &current_dir)?;
 
     println!("{cli:?}");
 
@@ -101,25 +110,39 @@ pub fn run(args: Vec<String>) -> anyhow::Result<()> {
 mod tests {
     use crate::cli::{Cli, validate};
     use pretty_assertions::{assert_eq, assert_str_eq};
+    use vfs::{MemoryFS, VfsPath};
+
+    fn build_fake_fs() -> VfsPath {
+        let fs: VfsPath = MemoryFS::new().into();
+        let file = fs.join("existing_file").unwrap();
+        file.create_file().unwrap();
+        fs
+    }
 
     #[test]
     fn test_validate_returns_ok_when_all_good() {
         assert_eq!(
             true,
-            validate(Cli {
-                input_files: vec!["Hello".to_string()],
-                output_file: "something".to_string(),
-            })
+            validate(
+                Cli {
+                    input_files: vec!["existing_file".to_string()],
+                    output_file: "something".to_string(),
+                },
+                &build_fake_fs()
+            )
             .is_ok()
         );
     }
 
     #[test]
     fn test_validate_returns_err_when_input_files_are_empty() {
-        let result = validate(Cli {
-            input_files: vec!["".to_string()],
-            output_file: "something".to_string(),
-        });
+        let result = validate(
+            Cli {
+                input_files: vec!["".to_string()],
+                output_file: "something".to_string(),
+            },
+            &build_fake_fs(),
+        );
         assert_eq!(true, result.is_err());
         assert_str_eq!(
             "You must provide at least one input file",
@@ -128,11 +151,30 @@ mod tests {
     }
 
     #[test]
+    fn test_validate_returns_err_when_input_file_does_not_exist() {
+        let result = validate(
+            Cli {
+                input_files: vec!["non_existing".to_string()],
+                output_file: "something".to_string(),
+            },
+            &build_fake_fs(),
+        );
+        assert_eq!(true, result.is_err());
+        assert_str_eq!(
+            "Some given input files cannot be read",
+            format!("{}", result.unwrap_err())
+        );
+    }
+
+    #[test]
     fn test_validate_returns_err_when_output_file_is_empty() {
-        let result = validate(Cli {
-            input_files: vec!["Hello".to_string()],
-            output_file: "".to_string(),
-        });
+        let result = validate(
+            Cli {
+                input_files: vec!["existing_file".to_string()],
+                output_file: "".to_string(),
+            },
+            &build_fake_fs(),
+        );
         assert_eq!(true, result.is_err());
         assert_str_eq!(
             "Please provide a valid output file",
