@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" data-available-lang="{{ available_lang }}">
+<head>
+    <title>{{ title }}</title>
+
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="application-name" content="Marmotte"/>
+
+    <meta property="og:title" content="Marmotte"/>
+
+    <link rel="icon" href="/favicon.ico"/>
+
+    {{# javascript_assets }}
+        <script type="module" crossorigin src="{{ . }}"></script>
+    {{/ javascript_assets }}
+    {{# css_assets }}
+        <link rel="stylesheet" crossorigin href="{{ . }}"/>
+    {{/ css_assets }}
+    {{# file_assets }}
+        <link rel="stylesheet" crossorigin href="{{ . }}"/>
+    {{/ file_assets }}
+</head>
+<body>
+{{{ content }}}
+</body>
+</html>

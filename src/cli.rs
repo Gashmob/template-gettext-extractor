@@ -17,6 +17,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+use crate::extractor::extract;
 use clap::builder::Styles;
 use clap::builder::styling::{AnsiColor, Style};
 use clap::{Args, FromArgMatches, Parser};
@@ -24,7 +25,7 @@ use vfs::VfsPath;
 
 #[derive(Parser, Debug)]
 #[command(name = "tge", version, about)]
-struct Cli {
+pub struct Cli {
     #[arg(
         required = true,
         help = "Template files from which you want to extract gettext strings"
@@ -35,7 +36,8 @@ struct Cli {
         short,
         long,
         default_value = "template_messages.pot",
-        help = "File in which extracted messages should go"
+        help = "File in which extracted messages should go",
+        long_help = "If file already exists, it will empty its content before writing in it"
     )]
     pub output_file: String,
 }
@@ -101,9 +103,7 @@ pub fn run(args: Vec<String>, current_dir: VfsPath) -> anyhow::Result<()> {
     let cli = Cli::from_arg_matches(&matches)?;
     let cli = validate(cli, &current_dir)?;
 
-    println!("{cli:?}");
-
-    Ok(())
+    extract(cli, current_dir)
 }
 
 #[cfg(test)]

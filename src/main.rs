@@ -21,6 +21,7 @@ use std::env;
 use vfs::PhysicalFS;
 
 mod cli;
+mod extractor;
 
 fn main() -> anyhow::Result<()> {
     cli::run(

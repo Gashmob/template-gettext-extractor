@@ -1,0 +1,5 @@
+msgid "Page not found"
+msgstr ""
+
+msgid "You may want to return to <a href=\"/\">home page</a>."
+msgstr ""
