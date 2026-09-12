@@ -21,8 +21,15 @@
     let
       eachSystem = nixpkgs.lib.genAttrs (import systems);
       pkgs = eachSystem (system: import nixpkgs { inherit system; });
+
+      tge = eachSystem (system: pkgs.${system}.callPackage ./tge.nix { });
     in
     {
+      packages = eachSystem (system: {
+        default = tge.${system};
+        tge = tge.${system};
+      });
+
       devShells = eachSystem (system: {
         default = pkgs.${system}.mkShell {
           name = "tge-dev-shell";

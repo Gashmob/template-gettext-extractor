@@ -1,7 +1,7 @@
 name: Tests
 on:
   push:
-    branches: ["master"]
+    branches: [ "master" ]
   pull_request:
 jobs:
   treefmt:
@@ -36,3 +36,12 @@ jobs:
       - name: Run tests
         run: nix develop --command cargo test
 
+  nix-build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: cachix/install-nix-action@0b0e072294b088b73964f1d72dfdac0951439dbd # v31.8.4
+      - name: Build
+        run: |
+          nix build .#tge
+          ./result/bin/tge --version
