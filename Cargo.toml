@@ -10,6 +10,15 @@ repository = "https://github.com/Gashmob/template-gettext-extractor"
 license = "GPL-2.0-or-later"
 categories = ["command-line-utilities", "development-tools"]
 edition = "2024"
+exclude = [
+    ".github",
+    "tools",
+    "flake.nix",
+    "flake.lock",
+    "tge.nix",
+    ".envrc",
+    ".editorconfig",
+]
 
 [[bin]]
 name = "tge"
