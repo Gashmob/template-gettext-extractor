@@ -14,6 +14,7 @@ rustPlatform.buildRustPackage rec {
   meta = {
     description = cargo_toml.package.description;
     homepage = cargo_toml.package.homepage;
+    changelog = "https://github.com/Gashmob/template-gettext-extractor/blob/master/CHANGELOG.md";
     license = lib.licenses.gpl2Plus;
     maintainers = cargo_toml.package.authors;
     sourceProvenance = lib.sourceTypes.fromSource;
