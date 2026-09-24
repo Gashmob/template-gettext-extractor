@@ -22,6 +22,7 @@ use vfs::PhysicalFS;
 
 mod cli;
 mod extractor;
+mod regex_collection;
 
 fn main() -> anyhow::Result<()> {
     cli::run(
