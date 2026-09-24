@@ -39,7 +39,7 @@ mod tests {
     fn test_mustache_gettext_0() {
         let regex_collection = get_mustache_regex_collection().unwrap();
         let mut count = 0;
-        for captures in regex_collection.gettext.captures_iter("Hello World!") {
+        for _ in regex_collection.gettext.captures_iter("Hello World!") {
             count += 1;
         }
         assert_eq!(0, count);
@@ -81,7 +81,7 @@ mod tests {
     fn test_mustache_gettext_3() {
         let regex_collection = get_mustache_regex_collection().unwrap();
         let mut count = 0;
-        for captures in regex_collection
+        for _ in regex_collection
             .gettext
             .captures_iter("{{# not-gettext }} Some value {{/ not-gettext }}")
         {
@@ -115,7 +115,7 @@ mod tests {
     fn test_mustache_gettext_5() {
         let regex_collection = get_mustache_regex_collection().unwrap();
         let mut count = 0;
-        for captures in regex_collection.gettext.captures_iter(
+        for _ in regex_collection.gettext.captures_iter(
             fs::read_to_string("src/_fixtures/test_extract_from_file_content_5.mustache")
                 .expect("Failed to read fixtures file")
                 .as_str(),
