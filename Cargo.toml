@@ -2,7 +2,7 @@
 name = "template-gettext-extractor"
 description = "Gettext strings extractor in template files"
 keywords = ["gettext", "extractor", "template", "mustache"]
-version = "1.0.0"
+version = "1.0.1"
 authors = ["Kevin Traini <kevin@ktraini.com>"]
 readme = "README.md"
 homepage = "https://github.com/Gashmob/template-gettext-extractor"
