@@ -18,16 +18,16 @@
  */
 
 use crate::cli::Cli;
-use regex::Regex;
+use crate::regex_collection::{RegexCollection, get_mustache_regex_collection};
 use std::collections::HashSet;
 use vfs::VfsPath;
 
 fn extract_from_file_content(
     file_content: String,
     messages: &mut HashSet<String>,
+    regex_collection: &RegexCollection,
 ) -> anyhow::Result<()> {
-    let re = Regex::new(r"\{\{# *gettext *}}(?<value>.*?)\{\{/ *gettext *}}")?;
-    for captures in re.captures_iter(&file_content) {
+    for captures in regex_collection.gettext.captures_iter(&file_content) {
         if let Some(value) = captures.name("value") {
             messages.insert(value.as_str().trim().to_string());
         }
@@ -61,11 +61,13 @@ fn write_messages(
 pub fn extract(cli: Cli, current_dir: VfsPath) -> anyhow::Result<()> {
     let mut messages: HashSet<String> = HashSet::new();
 
+    let regex_collection = get_mustache_regex_collection()?;
+
     for input_file in cli.input_files {
         let file_path = current_dir.join(input_file)?;
         let file_content = file_path.read_to_string()?;
 
-        extract_from_file_content(file_content, &mut messages)?;
+        extract_from_file_content(file_content, &mut messages, &regex_collection)?;
     }
 
     write_messages(messages, current_dir, cli.output_file)
@@ -74,122 +76,11 @@ pub fn extract(cli: Cli, current_dir: VfsPath) -> anyhow::Result<()> {
 #[cfg(test)]
 mod tests {
     use crate::cli::Cli;
-    use crate::extractor::{extract, extract_from_file_content, write_messages};
-    use pretty_assertions::{assert_eq, assert_str_eq};
+    use crate::extractor::{extract, write_messages};
+    use pretty_assertions::assert_str_eq;
     use std::collections::HashSet;
     use std::fs;
     use vfs::{MemoryFS, VfsPath};
-
-    #[test]
-    fn test_extract_from_file_content_0() {
-        let mut messages: HashSet<String> = HashSet::new();
-        let result = extract_from_file_content("Hello World!".to_string(), &mut messages);
-        assert_eq!(true, result.is_ok());
-        assert_eq!(true, messages.is_empty());
-    }
-
-    #[test]
-    fn test_extract_from_file_content_1() {
-        let mut expected = HashSet::new();
-        expected.insert("Some value".to_string());
-        let mut messages: HashSet<String> = HashSet::new();
-        let result = extract_from_file_content(
-            "{{# gettext }} Some value {{/ gettext }}".to_string(),
-            &mut messages,
-        );
-        assert_eq!(true, result.is_ok());
-        assert_eq!(expected, messages);
-    }
-
-    #[test]
-    fn test_extract_from_file_content_2() {
-        let mut expected = HashSet::new();
-        expected.insert("Some value".to_string());
-        let mut messages: HashSet<String> = HashSet::new();
-        let result = extract_from_file_content(
-            "{{# gettext }}Some value{{/ gettext }}".to_string(),
-            &mut messages,
-        );
-        assert_eq!(true, result.is_ok());
-        assert_eq!(expected, messages);
-    }
-
-    #[test]
-    fn test_extract_from_file_content_3() {
-        let mut messages: HashSet<String> = HashSet::new();
-        let result = extract_from_file_content(
-            "{{# not-gettext }} Some value {{/ not-gettext }}".to_string(),
-            &mut messages,
-        );
-        assert_eq!(true, result.is_ok());
-        assert_eq!(true, messages.is_empty());
-    }
-
-    #[test]
-    fn test_extract_from_file_content_4() {
-        let mut expected = HashSet::new();
-        expected.insert("Page not found".to_string());
-        expected.insert("You may want to return to <a href=\"/\">home page</a>.".to_string());
-        let mut messages: HashSet<String> = HashSet::new();
-        let result = extract_from_file_content(
-            fs::read_to_string("src/_fixtures/test_extract_from_file_content_4.mustache")
-                .expect("Failed to read fixtures file"),
-            &mut messages,
-        );
-        assert_eq!(true, result.is_ok());
-        assert_eq!(expected, messages);
-    }
-
-    #[test]
-    fn test_extract_from_file_content_5() {
-        let mut messages: HashSet<String> = HashSet::new();
-        let result = extract_from_file_content(
-            fs::read_to_string("src/_fixtures/test_extract_from_file_content_5.mustache")
-                .expect("Failed to read fixtures file"),
-            &mut messages,
-        );
-        assert_eq!(true, result.is_ok());
-        assert_eq!(true, messages.is_empty());
-    }
-
-    #[test]
-    fn test_extract_from_file_content_6() {
-        let mut expected = HashSet::new();
-        expected.insert("Some value".to_string());
-        let mut messages: HashSet<String> = HashSet::new();
-        let result = extract_from_file_content(
-            "{{#gettext}}Some value{{/gettext}}".to_string(),
-            &mut messages,
-        );
-        assert_eq!(true, result.is_ok());
-        assert_eq!(expected, messages);
-    }
-
-    #[test]
-    fn test_extract_from_file_content_7() {
-        let mut expected = HashSet::new();
-        expected.insert("Some value".to_string());
-        let mut messages: HashSet<String> = HashSet::new();
-        let result = extract_from_file_content(
-            "{{#gettext }}Some value{{/ gettext}}".to_string(),
-            &mut messages,
-        );
-        assert_eq!(true, result.is_ok());
-        assert_eq!(expected, messages);
-    }
-
-    #[test]
-    fn test_extract_from_file_content_8() {
-        let mut expected = HashSet::new();
-        expected.insert("Some value".to_string());
-        let mut messages: HashSet<String> = HashSet::new();
-        let result = extract_from_file_content(
-            "{{# gettext}}Some value{{/gettext }}".to_string(),
-            &mut messages,
-        );
-        assert_eq!(true, result.is_ok());
-        assert_eq!(expected, messages);
-    }
 
     #[test]
     fn test_write_messages_0() -> anyhow::Result<()> {
