@@ -1,0 +1,467 @@
+msgid "Account balance"
+msgstr ""
+
+msgid "Active sessions"
+msgstr ""
+
+msgid "Add new entry"
+msgstr ""
+
+msgid "Administrator"
+msgstr ""
+
+msgid "An error occurred while processing your request"
+msgstr ""
+
+msgid "Analytics"
+msgstr ""
+
+msgid "Application Dashboard"
+msgstr ""
+
+msgid "Are you sure?"
+msgstr ""
+
+msgid "Areas for improvement"
+msgstr ""
+
+msgid "Average value"
+msgstr ""
+
+msgid "Back to home"
+msgstr ""
+
+msgid "Billing"
+msgstr ""
+
+msgid "Calendar"
+msgstr ""
+
+msgid "Cancel subscription"
+msgstr ""
+
+msgid "Cancel"
+msgstr ""
+
+msgid "Change password"
+msgstr ""
+
+msgid "Change role"
+msgstr ""
+
+msgid "Code expires in 5 minutes"
+msgstr ""
+
+msgid "Compare periods"
+msgstr ""
+
+msgid "Complete your profile"
+msgstr ""
+
+msgid "Completed"
+msgstr ""
+
+msgid "Confirm deletion"
+msgstr ""
+
+msgid "Contact support"
+msgstr ""
+
+msgid "Conversion rate"
+msgstr ""
+
+msgid "Copy link"
+msgstr ""
+
+msgid "Created on"
+msgstr ""
+
+msgid "Dark mode"
+msgstr ""
+
+msgid "Dashboard"
+msgstr ""
+
+msgid "Delete item"
+msgstr ""
+
+msgid "Disable notifications"
+msgstr ""
+
+msgid "Discover key features"
+msgstr ""
+
+msgid "Downgrade plan"
+msgstr ""
+
+msgid "Download invoice"
+msgstr ""
+
+msgid "Download"
+msgstr ""
+
+msgid "Due today"
+msgstr ""
+
+msgid "Edit details"
+msgstr ""
+
+msgid "Editor"
+msgstr ""
+
+msgid "Enable notifications"
+msgstr ""
+
+msgid "Enter the code you received"
+msgstr ""
+
+msgid "Expected response time"
+msgstr ""
+
+msgid "Export as CSV"
+msgstr ""
+
+msgid "Feedback"
+msgstr ""
+
+msgid "File preview"
+msgstr ""
+
+msgid "Files"
+msgstr ""
+
+msgid "Filter results"
+msgstr ""
+
+msgid "Finish setup"
+msgstr ""
+
+msgid "Frequently asked questions"
+msgstr ""
+
+msgid "Get started"
+msgstr ""
+
+msgid "Give feedback"
+msgstr ""
+
+msgid "Growth rate"
+msgstr ""
+
+msgid "Guest access"
+msgstr ""
+
+msgid "Help center"
+msgstr ""
+
+msgid "High priority"
+msgstr ""
+
+msgid "How can we help?"
+msgstr ""
+
+msgid "Identity confirmed"
+msgstr ""
+
+msgid "Import from file"
+msgstr ""
+
+msgid "In progress"
+msgstr ""
+
+msgid "Integrations"
+msgstr ""
+
+msgid "Invite a colleague"
+msgstr ""
+
+msgid "Item successfully deleted"
+msgstr ""
+
+msgid "Join the community"
+msgstr ""
+
+msgid "Language preference"
+msgstr ""
+
+msgid "Last updated"
+msgstr ""
+
+msgid "Learn more"
+msgstr ""
+
+msgid "Light mode"
+msgstr ""
+
+msgid "Link copied to clipboard"
+msgstr ""
+
+msgid "Loading data"
+msgstr ""
+
+msgid "Log in"
+msgstr ""
+
+msgid "Log out"
+msgstr ""
+
+msgid "Low priority"
+msgstr ""
+
+msgid "Manage subscriptions"
+msgstr ""
+
+msgid "Mark all as read"
+msgstr ""
+
+msgid "Mark as read"
+msgstr ""
+
+msgid "Maximum size exceeded"
+msgstr ""
+
+msgid "Members online"
+msgstr ""
+
+msgid "Messages"
+msgstr ""
+
+msgid "Modified by"
+msgstr ""
+
+msgid "Monthly statistics"
+msgstr ""
+
+msgid "Move to folder"
+msgstr ""
+
+msgid "Next invoice"
+msgstr ""
+
+msgid "Next step"
+msgstr ""
+
+msgid "No results found"
+msgstr ""
+
+msgid "Normal priority"
+msgstr ""
+
+msgid "Notification settings"
+msgstr ""
+
+msgid "Notifications"
+msgstr ""
+
+msgid "Onboarding"
+msgstr ""
+
+msgid "Overdue"
+msgstr ""
+
+msgid "Owner"
+msgstr ""
+
+msgid "Password must contain at least 8 characters"
+msgstr ""
+
+msgid "Payment method"
+msgstr ""
+
+msgid "Peak hours"
+msgstr ""
+
+msgid "Pending tasks"
+msgstr ""
+
+msgid "Permissions"
+msgstr ""
+
+msgid "Please enter a valid email address"
+msgstr ""
+
+msgid "Previous step"
+msgstr ""
+
+msgid "Profile"
+msgstr ""
+
+msgid "Projects"
+msgstr ""
+
+msgid "Read the documentation"
+msgstr ""
+
+msgid "Recent activity"
+msgstr ""
+
+msgid "Remove member"
+msgstr ""
+
+msgid "Rename file"
+msgstr ""
+
+msgid "Renewal date"
+msgstr ""
+
+msgid "Reply to comment"
+msgstr ""
+
+msgid "Reports"
+msgstr ""
+
+msgid "Resend code"
+msgstr ""
+
+msgid "Retry"
+msgstr ""
+
+msgid "Revoke access"
+msgstr ""
+
+msgid "Save changes"
+msgstr ""
+
+msgid "Scheduled for later"
+msgstr ""
+
+msgid "Search"
+msgstr ""
+
+msgid "Search..."
+msgstr ""
+
+msgid "Security settings"
+msgstr ""
+
+msgid "Security"
+msgstr ""
+
+msgid "Send message"
+msgstr ""
+
+msgid "Settings"
+msgstr ""
+
+msgid "Share link"
+msgstr ""
+
+msgid "Show less"
+msgstr ""
+
+msgid "Show more"
+msgstr ""
+
+msgid "Skip for now"
+msgstr ""
+
+msgid "Sort by date"
+msgstr ""
+
+msgid "Sort by name"
+msgstr ""
+
+msgid "Submit a ticket"
+msgstr ""
+
+msgid "Submit"
+msgstr ""
+
+msgid "Subscription plan"
+msgstr ""
+
+msgid "Support"
+msgstr ""
+
+msgid "Take a quick tour"
+msgstr ""
+
+msgid "Tasks"
+msgstr ""
+
+msgid "Team members"
+msgstr ""
+
+msgid "Team"
+msgstr ""
+
+msgid "Thank you for your feedback"
+msgstr ""
+
+msgid "This field is required"
+msgstr ""
+
+msgid "Ticket status"
+msgstr ""
+
+msgid "Time zone"
+msgstr ""
+
+msgid "Top performers"
+msgstr ""
+
+msgid "Total items"
+msgstr ""
+
+msgid "Trust this device"
+msgstr ""
+
+msgid "Two-factor authentication"
+msgstr ""
+
+msgid "Undo"
+msgstr ""
+
+msgid "Unread messages"
+msgstr ""
+
+msgid "Unsupported file type"
+msgstr ""
+
+msgid "Update billing address"
+msgstr ""
+
+msgid "Upgrade plan"
+msgstr ""
+
+msgid "Upload a file"
+msgstr ""
+
+msgid "Verification code sent"
+msgstr ""
+
+msgid "Verify identity"
+msgstr ""
+
+msgid "View all"
+msgstr ""
+
+msgid "View full history"
+msgstr ""
+
+msgid "Viewer"
+msgstr ""
+
+msgid "Was this helpful?"
+msgstr ""
+
+msgid "Watch the tutorial"
+msgstr ""
+
+msgid "Weekly report"
+msgstr ""
+
+msgid "Welcome back"
+msgstr ""
+
+msgid "Welcome to the platform"
+msgstr ""
+
+msgid "Yearly overview"
+msgstr ""
+
+msgid "You are all set"
+msgstr ""
+
+msgid "Your profile has been updated"
+msgstr ""

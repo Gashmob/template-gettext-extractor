@@ -19,17 +19,24 @@
 
 use crate::cli::Cli;
 use crate::regex_collection::{RegexCollection, get_mustache_regex_collection};
+use anyhow::Error;
 use std::collections::HashSet;
+use std::sync::{Arc, Mutex};
+use std::thread;
+use std::thread::JoinHandle;
 use vfs::VfsPath;
 
 fn extract_from_file_content(
     file_content: String,
-    messages: &mut HashSet<String>,
+    messages: &mut Arc<Mutex<HashSet<String>>>,
     regex_collection: &RegexCollection,
 ) -> anyhow::Result<()> {
     for captures in regex_collection.gettext.captures_iter(&file_content) {
         if let Some(value) = captures.name("value") {
-            messages.insert(value.as_str().trim().to_string());
+            messages
+                .lock()
+                .unwrap()
+                .insert(value.as_str().trim().to_string());
         }
     }
 
@@ -37,8 +44,8 @@ fn extract_from_file_content(
 }
 
 fn write_messages(
-    messages: HashSet<String>,
-    current_dir: VfsPath,
+    messages: Arc<Mutex<HashSet<String>>>,
+    current_dir: Arc<VfsPath>,
     output_file: String,
 ) -> anyhow::Result<()> {
     let file_path = current_dir.join(output_file)?;
@@ -49,6 +56,8 @@ fn write_messages(
     };
 
     let mut messages_to_write: Vec<String> = messages
+        .lock()
+        .unwrap()
         .iter()
         .map(|message| format!("msgid \"{}\"\nmsgstr \"\"\n", message.replace('"', "\\\"")))
         .collect();
@@ -59,15 +68,29 @@ fn write_messages(
 }
 
 pub fn extract(cli: Cli, current_dir: VfsPath) -> anyhow::Result<()> {
-    let mut messages: HashSet<String> = HashSet::new();
+    let messages: Arc<Mutex<HashSet<String>>> = Arc::new(Mutex::new(HashSet::new()));
 
-    let regex_collection = get_mustache_regex_collection()?;
+    let regex_collection = Arc::new(get_mustache_regex_collection()?);
+    let current_dir = Arc::new(current_dir);
 
+    let mut join_handles: Vec<JoinHandle<anyhow::Result<()>>> = vec![];
     for input_file in cli.input_files {
-        let file_path = current_dir.join(input_file)?;
-        let file_content = file_path.read_to_string()?;
+        let mut thread_messages = messages.clone();
+        let thread_current_dir = current_dir.clone();
+        let thread_regex_collection = regex_collection.clone();
+        let join_handle = thread::spawn(move || -> anyhow::Result<()> {
+            let file_path = thread_current_dir.join(input_file)?;
+            let file_content = file_path.read_to_string()?;
 
-        extract_from_file_content(file_content, &mut messages, &regex_collection)?;
+            extract_from_file_content(file_content, &mut thread_messages, &thread_regex_collection)
+        });
+        join_handles.push(join_handle);
+    }
+
+    for join_handle in join_handles {
+        let _ = join_handle
+            .join()
+            .map_err(|_| Error::msg("Failed to join thread"))?;
     }
 
     write_messages(messages, current_dir, cli.output_file)
@@ -80,6 +103,8 @@ mod tests {
     use pretty_assertions::assert_str_eq;
     use std::collections::HashSet;
     use std::fs;
+    use std::sync::{Arc, Mutex};
+    use std::time::SystemTime;
     use vfs::{MemoryFS, VfsPath};
 
     #[test]
@@ -88,7 +113,11 @@ mod tests {
         messages.insert("Some value".to_string());
         let root: VfsPath = MemoryFS::new().into();
         let output_file = root.join("messages.pot")?;
-        write_messages(messages, root, "messages.pot".to_string())?;
+        write_messages(
+            Arc::new(Mutex::new(messages)),
+            Arc::new(root),
+            "messages.pot".to_string(),
+        )?;
         assert_str_eq!(
             fs::read_to_string("src/_fixtures/test_write_messages_0.pot")
                 .expect("Failed to read fixtures file"),
@@ -104,7 +133,11 @@ mod tests {
         messages.insert("You may want to return to <a href=\"/\">home page</a>.".to_string());
         let root: VfsPath = MemoryFS::new().into();
         let output_file = root.join("messages.pot")?;
-        write_messages(messages, root, "messages.pot".to_string())?;
+        write_messages(
+            Arc::new(Mutex::new(messages)),
+            Arc::new(root),
+            "messages.pot".to_string(),
+        )?;
         assert_str_eq!(
             fs::read_to_string("src/_fixtures/test_write_messages_1.pot")
                 .expect("Failed to read fixtures file"),
@@ -151,6 +184,45 @@ mod tests {
 
         assert_str_eq!(
             fs::read_to_string("src/_fixtures/test_extract.pot")
+                .expect("Failed to read fixtures file"),
+            output_file.read_to_string()?
+        );
+
+        Ok(())
+    }
+
+    #[test]
+    fn test_extract_performance() -> anyhow::Result<()> {
+        let root: VfsPath = MemoryFS::new().into();
+        let output_file = root.join("messages.pot")?;
+        write!(
+            root.join("test_extract_performance.mustache")?
+                .create_file()?,
+            "{}",
+            fs::read_to_string("src/_fixtures/test_extract_performance.mustache")
+                .expect("Failed to read fixtures file")
+        )?;
+        let mut input_files = vec![];
+        for _ in 1..1_000 {
+            input_files.push("test_extract_performance.mustache".to_string());
+        }
+        let start_time = SystemTime::now();
+        println!("Start");
+        extract(
+            Cli {
+                input_files,
+                output_file: "messages.pot".to_string(),
+            },
+            root,
+        )?;
+
+        println!(
+            "Extract took {} seconds",
+            start_time.elapsed()?.as_secs_f32()
+        );
+
+        assert_str_eq!(
+            fs::read_to_string("src/_fixtures/test_extract_performance.pot")
                 .expect("Failed to read fixtures file"),
             output_file.read_to_string()?
         );
